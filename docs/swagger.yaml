@@ -1,0 +1,30 @@
+basePath: /
+info:
+  contact: {}
+  description: Backend server for the sample app
+  license: {}
+  termsOfService: http://swagger.io/terms/
+  title: sample API docs
+  version: 0.1.0
+paths:
+  /authenticate:
+    post:
+      consumes:
+      - application/json
+      description: TODO
+      parameters:
+      - description: id of connecting client
+        in: formData
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Creates token for subscribers
+      tags:
+      - Auth
+swagger: "2.0"
+tags:
+- description: user authentication operations
+  name: Auth
