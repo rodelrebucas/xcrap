@@ -14,10 +14,10 @@ require (
 	github.com/PuerkitoBio/goquery v1.5.1 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/antchfx/htmlquery v1.2.3 // indirect
-	github.com/antchfx/xmlquery v1.2.4 // indirect
+	github.com/antchfx/xmlquery v1.2.4
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-playground/validator/v10 v10.2.0
-	github.com/gocolly/colly/v2 v2.0.1 // indirect
+	github.com/gocolly/colly/v2 v2.0.1
 	github.com/golang/protobuf v1.4.0 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/labstack/echo/v4 v4.1.16
