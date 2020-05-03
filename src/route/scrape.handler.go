@@ -16,9 +16,7 @@ import (
 	"github.com/gocolly/colly/v2/queue"
 )
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 const ALLOWED_MYNIMO = "mynimo.com"
-const ALLOWED_SOURCE = ""
 var panickRecover = func() {
 	if err := recover(); err != nil {
 		log.Println("Error: ", err)
