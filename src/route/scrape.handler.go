@@ -65,8 +65,7 @@ func createCollector(redis, redispass string) *colly.Collector{
 	return sc
 }
 
-func myNimoCollector(cl *colly.Collector, c echo.Context, q *queue.Queue) (bool, string) {
-	noError := true
+func myNimoCollector(cl *colly.Collector, c echo.Context, q *queue.Queue) {
 	jobLocation := c.QueryParam("location")
 	jobType := c.QueryParam("type")
 
@@ -96,9 +95,7 @@ func myNimoCollector(cl *colly.Collector, c echo.Context, q *queue.Queue) (bool,
 		})
 		cl.OnError(func(r *colly.Response, err error){
 			if err != nil {
-				noError = false
 				log.Println(err)
-				
 			}
 		})
 		cl.OnScraped(func(r *colly.Response) {
@@ -106,27 +103,46 @@ func myNimoCollector(cl *colly.Collector, c echo.Context, q *queue.Queue) (bool,
 		}) 
 		q.AddURL(fmt.Sprintf("https://mynimo.com/%s/%s", jobLocation, jobType))
 	} else {
-		return noError, "Nothing to do."
+		log.Println("+Nothing to do...+")
 	}	
-	return noError, ""
+}
+
+type queueCollector struct {
+	qc *colly.Collector
+	q *queue.Queue
+}
+
+func scrapeAll(c echo.Context, rH, rP string) []queueCollector {
+	q1, _ := queue.New(
+			8, // Number of consumer threads
+			&queue.InMemoryQueueStorage{MaxSize: 10000},)
+	q2, _ := queue.New(
+			8, // Number of consumer threads
+			&queue.InMemoryQueueStorage{MaxSize: 10000},)
+	queues := []queueCollector{
+			{
+				qc: createCollector(rH, rP),
+				q: q1,
+			},
+			{
+				qc: createCollector(rH, rP),
+				q: q2,
+			},
+		}
+	myNimoCollector(queues[0].qc, c, queues[0].q)
+	myNimoCollector(queues[1].qc, c, queues[1].q) // replace with other collector
+	return queues
+}	
+
+func runQueues(q []queueCollector) {
+	for _, itemQ := range q {
+		itemQ.q.Run(itemQ.qc)
+	}
 }
 
 func ScrapeHandler(redisHost, redisPass string) echo.HandlerFunc{
-	q, _ := queue.New(
-		8, // Number of consumer threads
-		&queue.InMemoryQueueStorage{MaxSize: 10000}, // Use default queue storage
-	)
 	return func (c echo.Context) (err error) {
-		collector := createCollector(redisHost, redisPass)
-		noError, msg := myNimoCollector(collector, c, q)
-		go func() {
-			q.Run(collector)
-		}()
-		if noError {
-			if msg != "" {return c.JSON(http.StatusOK, msg)
-			}else{return c.JSON(http.StatusOK, "Job searching started...")}
-		} else {
-			return c.JSON(http.StatusInternalServerError, "Failed searching jobs...")
-		}
-	}
+		queues := scrapeAll(c, redisHost, redisPass)
+		go func(){runQueues(queues)}()
+		return c.JSON(http.StatusOK, "Job searching started...")}
 } 
