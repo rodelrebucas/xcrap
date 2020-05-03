@@ -31,9 +31,7 @@ func main() {
 	}
 
 	// routes
-	// route.Auth(e, environ.Secret)
-	// route.Scrape(e
-	route.Register(e, environ.Secret)
+	route.Register(e, environ)
 
 	e.Logger.Fatal(e.Start(":" + environ.Port))
 }

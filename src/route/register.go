@@ -2,9 +2,10 @@ package route
 
 import (
 	"github.com/labstack/echo/v4"
+	"scraper/backend/env"
 )
 
-func Register(e *echo.Echo, secret string) {
-	e.POST("/auth", AuthenticateHandler(secret))
-	e.GET("/scrape", ScrapeHandler)
+func Register(e *echo.Echo, environ *env.Var) {
+	e.POST("/auth", AuthenticateHandler(environ.Secret))
+	e.GET("/scrape", ScrapeHandler(environ.RedisHost, environ.RedisPass))
 }
