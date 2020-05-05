@@ -112,10 +112,10 @@ type queueCollector struct {
 
 func scrapeAll(c echo.Context, rH, rP string) []queueCollector {
 	q1, _ := queue.New(
-			8, // Number of consumer threads
+			8,
 			&queue.InMemoryQueueStorage{MaxSize: 10000},)
 	q2, _ := queue.New(
-			8, // Number of consumer threads
+			8,
 			&queue.InMemoryQueueStorage{MaxSize: 10000},)
 	queues := []queueCollector{
 			{
@@ -140,6 +140,7 @@ func runQueues(q []queueCollector) {
 
 func ScrapeHandler(redisHost, redisPass string) echo.HandlerFunc{
 	return func (c echo.Context) (err error) {
+		fmt.Println(c.QueryParam)
 		queues := scrapeAll(c, redisHost, redisPass)
 		go func(){runQueues(queues)}()
 		return c.JSON(http.StatusOK, "Job searching started...")}

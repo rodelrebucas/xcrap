@@ -25,6 +25,7 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.Secure())
+	e.Use(middleware.CORS())
 
 	if environ.Env == "development" {
 		e.GET("/swagger/*", echoSwagger.WrapHandler)
