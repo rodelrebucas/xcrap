@@ -1,9 +1,10 @@
 package main
 
-import (	
+import (
 	"os"
-	"scraper/backend/route"
 	_ "scraper/backend/docs"
+	"scraper/backend/route"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	// "scraper/backend/env"
@@ -30,13 +31,16 @@ func main() {
 	// 	AllowMethods: []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
 	// 	AllowCredentials: true,
 	// }))
-	
+
 	/* Uncomment to load env variables and attach doc routes*/
 	// env.LoadEnv()
 	// e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	/* routes */
+	// Routes
 	route.Register(e)
+	// TODO: Add router for running
+	// scraper.CreateDBCollection()
+	// job()
 
 	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
 }

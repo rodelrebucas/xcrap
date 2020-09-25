@@ -1,15 +1,22 @@
 package scheduler
 
 import (
-	"github.com/carlescere/scheduler"
-	"fmt"
-	)
+	"scraper/backend/scraper"
+	"scraper/backend/util"
+	"time"
 
-func RunAtMidnight() {
-	job := func() {
-		fmt.Println("Dummy function")
-	   }
-	   scheduler.Every(5).Seconds().Run(job)
-	   scheduler.Every().Day().Run(job)
-	   scheduler.Every().Sunday().At("08:30").Run(job)
+	"github.com/carlescere/scheduler"
+)
+
+func job() {
+	util.LogWhenDev("Starting job scrape", time.Now().String())
+	exitCh := make(chan struct{})
+	// TODO: Create indeces for searching
+	// TODO: Change prod setup
+	// scraper.DeletePreviousData()
+	// scraper.Scrape()
+	// # Prod
+	scheduler.Every().Day().At("23:00").Run(scraper.DeletePreviousData)
+	scheduler.Every().Day().At("00:00").Run(scraper.Scrape)
+	<-exitCh
 }

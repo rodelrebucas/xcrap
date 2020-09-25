@@ -8,6 +8,9 @@ replace scraper/backend/env => ./env
 
 replace scraper/backend/docs => ./docs
 
+replace scraper/backend/scheduler => ./scheduler
+
+replace scraper/backend/util => ./util
 
 require (
 	github.com/PuerkitoBio/goquery v1.5.1 // indirect
@@ -31,6 +34,7 @@ require (
 	github.com/stretchr/testify v1.4.0
 	github.com/swaggo/echo-swagger v1.0.0
 	github.com/swaggo/swag v1.6.3
+	go.mongodb.org/mongo-driver v1.4.1
 	golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0
 	google.golang.org/appengine v1.6.6 // indirect
 )
