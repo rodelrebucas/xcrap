@@ -1,4 +1,4 @@
-### Scraping with specific jobs with colly
+### Scraping specific jobs with colly
 
 Build the binary:
 
